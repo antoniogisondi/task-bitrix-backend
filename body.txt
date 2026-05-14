@@ -1,0 +1,28 @@
+//GET
+https://bismatica.bitrix24.com/rest/11/9y2uu9ziflmrsok2/tasks.task.get.json
+
+
+//CREATE
+https://bismatica.bitrix24.com/rest/11/9y2uu9ziflmrsok2/tasks.task.add.json
+{
+    "fields": {
+    "TITLE": "Titolo incarico creato da antonio",
+    "DESCRIPTION": "Descrizione creata tramite Thunder Client.",
+    "DEADLINE": "2026-05-30T18:00:00+02:00"
+  }
+}
+
+// UPDATE
+https://bismatica.bitrix24.com/rest/11/9y2uu9ziflmrsok2/tasks.task.update.json
+{
+  "taskId": 2361,
+    "fields": {
+    "TITLE": "Titolo incarico modificato da antonio",
+    "DESCRIPTION": "Descrizione aggiornata tramite Thunder Client.",
+    "DEADLINE": "2026-05-30T18:00:00+02:00"
+  }
+}
+
+
+//DELETE
+passare il parametrro, ovvero l'id del task, in url e non nel body
