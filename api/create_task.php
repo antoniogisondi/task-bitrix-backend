@@ -1,9 +1,7 @@
 <?php
 // api/create-task.php
 
-require_once __DIR__ . '/../config/autoload.php';
 require_once __DIR__ . '/../config/bitrix.php';
-require_once __DIR__ . '/../config/app.php';
 
 use App\Bitrix\BitrixClient;
 use App\Bitrix\TaskService;
