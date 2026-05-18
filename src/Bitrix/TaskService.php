@@ -76,15 +76,63 @@ class TaskService
        return $this->client->call('tasks.task.list', $params);
     }
 
-    /** Modifica i campi di un task esistente. */
-    public function update(int $taskId, array $fields): array
+
+    public function update(int $taskId, array $data): array
     {
+        $fields = [];
+
+         if (isset($data['title'])) {
+        $fields['TITLE'] = $data['title'];
+        }
+
+        if (isset($data['description']) || isset($data['company']) || isset($data['signature'])) {
+            $fields['DESCRIPTION'] = $this->$data;
+        }
+
+        if (isset($data['responsible_id'])) {
+            $fields['RESPONSIBLE_ID'] = (int) $data['responsible_id'];
+        }
+
+        if (isset($data['deadline'])) {
+            $fields['DEADLINE'] = $data['deadline'];
+        }
+
+        if (isset($data['allow_time_tracking'])) {
+            $fields['ALLOW_TIME_TRACKING'] = !empty($data['allow_time_tracking']) ? 'Y' : 'N';
+        }
+
+        if (isset($data['participants']) && is_array($data['participants'])) {
+            $fields['ACCOMPLICES'] = array_map('intval', $data['participants']);
+        }
+
+        if (isset($data['auditors']) && is_array($data['auditors'])) {
+            $fields['AUDITORS'] = array_map('intval', $data['auditors']);
+        }
+
+        if (!empty($data['company_id'])) {
+            $fields['UF_CRM_TASK'] = ['CO_' . (int) $data['company_id']];
+        }
+
+        if (!empty($data['extra_fields']) && is_array($data['extra_fields'])) {
+            foreach ($data['extra_fields'] as $key => $value) {
+                $fields[$key] = $value;
+            }
+        }
+
+        if (empty($fields)) {
+            return [
+                'success' => false,
+                'message' => 'Nessun campo da aggiornare.'
+            ];
+        }
+
         return $this->client->call('tasks.task.update', [
-            'taskId' => $taskId,
-            'fields' => $fields,
+        'taskId' => $taskId,
+        'fields' => $fields
         ]);
     }
 
+    
     /** Elimina un task. */
     public function delete(int $taskId): array
     {
