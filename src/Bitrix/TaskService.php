@@ -1,7 +1,4 @@
 <?php
-// src/Bitrix/TaskService.php
-
-namespace App\Bitrix;
 
 class TaskService
 {
@@ -11,11 +8,47 @@ class TaskService
     // CRUD base
     // ------------------------------------------------------------------
 
-    /** Crea un nuovo task. Restituisce l'array con i dati del task creato. */
-    public function create(array $fields): array
+   
+    public function create(array $data): array
     {
-        return $this->client->call('tasks.task.add', ['fields' => $fields]);
+        $fields = [];
+
+        // Campi obbligatori
+        $fields['TITLE'] = $data['title'];
+        $fields['DESCRIPTION'] = ($data)['description'];
+        $fields['RESPONSIBLE_ID'] = (int) $data['responsible_id'];
+        $fields['DEADLINE'] = $data['deadline'];
+
+        // Gestione tempo
+        $fields['ALLOW_TIME_TRACKING'] = !empty($data['allow_time_tracking']) ? 'Y' : 'N';
+
+        // Partecipanti
+        if (!empty($data['participants']) && is_array($data['participants'])) {
+            $fields['ACCOMPLICES'] = array_map('intval', $data['participants']);
+        }
+
+        // Osservatori
+        if (!empty($data['auditors']) && is_array($data['auditors'])) {
+            $fields['AUDITORS'] = array_map('intval', $data['auditors']);
+        }
+
+        // Collegamento azienda CRM Bitrix, se hai l'ID azienda
+        if (!empty($data['company_id'])) {
+            $fields['UF_CRM_TASK'] = ['CO_' . (int) $data['company_id']];
+        }
+
+        // Campi extra dinamici già nel formato Bitrix
+        if (!empty($data['extra_fields']) && is_array($data['extra_fields'])) {
+            foreach ($data['extra_fields'] as $key => $value) {
+                $fields[$key] = $value;
+            }
+        }
+
+         return $this->client->call('tasks.task.add', [
+            'fields' => $fields
+        ]);
     }
+
 
     /** Legge un task per ID. */
     public function get(int $taskId): array
