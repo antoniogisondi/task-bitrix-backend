@@ -57,13 +57,23 @@ class TaskService
     }
 
 
-    public function list(array $filter = [], array $select = [], int $start = 0): array
+    public function list(array $filter = [], array $select = [], array $order = []): array
     {
-        return $this->client->call('tasks.task.list', [
-            'filter' => $filter,
-            'select' => $select ?: ['ID', 'TITLE', 'STATUS', 'DEADLINE', 'RESPONSIBLE_ID'],
-            'start'  => $start,
-        ]);
+        $params = [];
+
+        if (!empty($filter)) {
+            $params['filter'] = $filter;
+        }
+
+        if (!empty($select)) {
+            $params['select'] = $select;
+        }
+
+        if (!empty($order)) {
+            $params['order'] = $order;
+        }
+
+       return $this->client->call('tasks.task.list', $params);
     }
 
     /** Modifica i campi di un task esistente. */
