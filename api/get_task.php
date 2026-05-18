@@ -31,6 +31,17 @@ if (!$result['success']) {
     ], 400);
 }
 
+$bitrixResult = $result['data']['result'] ?? null;
+
+if(empty($bitrixResult)){
+      sendJson([
+        'success' => false,
+        'message' => 'Task non trovato oppure non accessibile con questo webhook.',
+        'task_id' => $taskId,
+        'bitrix_response' => $result['data']
+    ], 404);
+}
+
 $task = $result['data']['result']['task'] ?? null;
 
 sendJson([
