@@ -56,12 +56,7 @@ class TaskService
         return $this->client->call('tasks.task.get', ['taskId' => $taskId]);
     }
 
-    /**
-     * Lista task con filtri opzionali.
-     *
-     * Esempi di $filter: ['RESPONSIBLE_ID' => 11, 'STATUS' => 2]
-     * Esempi di $select: ['ID', 'TITLE', 'STATUS', 'DEADLINE']
-     */
+
     public function list(array $filter = [], array $select = [], int $start = 0): array
     {
         return $this->client->call('tasks.task.list', [
