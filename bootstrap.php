@@ -1,8 +1,9 @@
-<<?php
+<?php
 
+ob_start();
 header('Content-Type: application/json; charset=utf-8');
 
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:5173');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
@@ -82,7 +83,13 @@ function getJsonInput(): array
 
 function sendJson(array $data, int $statusCode = 200): void
 {
+    if (ob_get_length()) {
+        ob_clean();
+    }
+
     http_response_code($statusCode);
+
+    header('Content-Type: application/json; charset=utf-8');
 
     echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
