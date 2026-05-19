@@ -6,11 +6,8 @@ requirePost();
 
 $data = getJsonInput();
 
-requireFields($data, [
-    'task_id'
-]);
-
-$taskId = (int) $data['task_id'];
+// Accetta sia task_id sia taskId
+$taskId = (int) ($data['task_id'] ?? $data['taskId'] ?? 0);
 
 if ($taskId <= 0) {
     sendJson([
@@ -33,8 +30,8 @@ if (!$result['success']) {
 
 $bitrixResult = $result['data']['result'] ?? null;
 
-if(empty($bitrixResult)){
-      sendJson([
+if (empty($bitrixResult)) {
+    sendJson([
         'success' => false,
         'message' => 'Task non trovato oppure non accessibile con questo webhook.',
         'task_id' => $taskId,
@@ -42,7 +39,7 @@ if(empty($bitrixResult)){
     ], 404);
 }
 
-$task = $result['data']['result']['task'] ?? null;
+$task = $bitrixResult['task'] ?? $bitrixResult;
 
 sendJson([
     'success' => true,
