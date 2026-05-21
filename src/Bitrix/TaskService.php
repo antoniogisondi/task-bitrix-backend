@@ -15,9 +15,10 @@ class TaskService
 
         // Campi obbligatori
         $fields['TITLE'] = $data['title'];
-        $fields['DESCRIPTION'] = ($data)['description'];
+        $fields['DESCRIPTION'] = $data['description'];
         $fields['RESPONSIBLE_ID'] = (int) $data['responsible_id'];
         $fields['DEADLINE'] = $data['deadline'];
+        $fields['STATUS'] = !empty($data['status']) ? (int) $data['status'] : 2;
 
         // Gestione tempo
         $fields['ALLOW_TIME_TRACKING'] = !empty($data['allow_time_tracking']) ? 'Y' : 'N';
@@ -95,6 +96,10 @@ class TaskService
 
         if (isset($data['deadline'])) {
             $fields['DEADLINE'] = $data['deadline'];
+        }
+
+        if (isset($data['status']) && $data['status'] !== '') {
+            $fields['STATUS'] = (int) $data['status'];
         }
 
         if (isset($data['allow_time_tracking'])) {
