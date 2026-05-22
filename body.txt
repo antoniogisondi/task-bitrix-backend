@@ -26,3 +26,8 @@ https://bismatica.bitrix24.com/rest/11/9y2uu9ziflmrsok2/tasks.task.update.json
 
 //DELETE
 passare il parametrro, ovvero l'id del task, in url e non nel body
+
+
+//LISTA UTENTI
+https://bismatica.bitrix24.com/rest/11/9y2uu9ziflmrsok2/user.get
+

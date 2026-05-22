@@ -16,6 +16,17 @@ require_once __DIR__ . '/config/bitrix.php';
 
 $bitrixClientPath = __DIR__ . '/src/Bitrix/BitrixClient.php';
 $taskServicePath = __DIR__ . '/src/Bitrix/TaskService.php';
+$userServicePath = __DIR__ . '/src/Bitrix/UserService.php';
+
+if (!file_exists($userServicePath)) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'File UserService.php non trovato',
+        'path' => $bitrixClientPath
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if (!file_exists($bitrixClientPath)) {
     http_response_code(500);
@@ -39,6 +50,17 @@ if (!file_exists($taskServicePath)) {
 
 require_once $bitrixClientPath;
 require_once $taskServicePath;
+require_once $userServicePath;
+
+if (!class_exists('UserService')) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'La classe BitrixClient non è stata caricata. Controlla il nome della classe o eventuali namespace.',
+        'path' => $bitrixClientPath
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if (!class_exists('BitrixClient')) {
     http_response_code(500);
@@ -123,4 +145,10 @@ function taskService(): TaskService
     $client = new BitrixClient(BITRIX_WEBHOOK_URL);
 
     return new TaskService($client);
+}
+
+function userService(): UserService
+{
+    $users = new BitrixClient(BITRIX_WEBHOOK_URL);
+    return new UserService($users);
 }
