@@ -16,7 +16,8 @@ $select = $data['select'] ?? [
     'DEADLINE',
     'CREATED_DATE',
     'CHANGED_DATE',
-    'CLOSED_DATE'
+    'CLOSED_DATE',
+    'UF_CRM_TASK'
 ];
 
 $order = $data['order'] ?? [

@@ -54,7 +54,26 @@ class TaskService
     /** Legge un task per ID. */
     public function get(int $taskId): array
     {
-        return $this->client->call('tasks.task.get', ['taskId' => $taskId]);
+        return $this->client->call('tasks.task.get', [
+            'taskId' => $taskId,
+            'select' => [
+            '*',
+            'UF_CRM_TASK',
+            'UF_TASK_WEBDAV_FILES',
+            'UF_MAIL_MESSAGE',
+            'UF_AUTO_357479978862',
+            'UF_AUTO_955961840475',
+            'UF_AUTO_853416300964',
+            'UF_AUTO_587188650894',
+            'UF_AUTO_804421658935',
+            'UF_AUTO_293519119469',
+            'UF_AUTO_526872679459',
+            'UF_AUTO_774498742199',
+            'UF_AUTO_768767389181',
+            'UF_AUTO_247234252507',
+            'UF_AUTO_511562948962'
+            ]
+        ]);
     }
 
 

@@ -17,6 +17,17 @@ require_once __DIR__ . '/config/bitrix.php';
 $bitrixClientPath = __DIR__ . '/src/Bitrix/BitrixClient.php';
 $taskServicePath = __DIR__ . '/src/Bitrix/TaskService.php';
 $userServicePath = __DIR__ . '/src/Bitrix/UserService.php';
+$companyServicePath = __DIR__ . '/src/Bitrix/CompanyService.php';
+
+if (!file_exists($companyServicePath)) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'File CompanyService.php non trovato',
+        'path' => $bitrixClientPath
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if (!file_exists($userServicePath)) {
     http_response_code(500);
@@ -51,13 +62,24 @@ if (!file_exists($taskServicePath)) {
 require_once $bitrixClientPath;
 require_once $taskServicePath;
 require_once $userServicePath;
+require_once $companyServicePath;
+
+if (!class_exists('CompanyService')) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'La classe CompanyService non è stata caricata. Controlla il nome della classe o eventuali namespace.',
+        'path' => $companyServicePath
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if (!class_exists('UserService')) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'La classe BitrixClient non è stata caricata. Controlla il nome della classe o eventuali namespace.',
-        'path' => $bitrixClientPath
+        'message' => 'La classe UserService non è stata caricata. Controlla il nome della classe o eventuali namespace.',
+        'path' => $userServicePath
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -151,4 +173,10 @@ function userService(): UserService
 {
     $users = new BitrixClient(BITRIX_WEBHOOK_URL);
     return new UserService($users);
+}
+
+function companyService(): CompanyService
+{
+    $companies = new BitrixClient(BITRIX_WEBHOOK_URL);
+    return new CompanyService($companies);
 }
