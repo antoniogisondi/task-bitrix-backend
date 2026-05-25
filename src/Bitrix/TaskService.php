@@ -167,24 +167,29 @@ class TaskService
     // Cambio stato
     // ------------------------------------------------------------------
 
-    public function start(int $taskId): array
+    public function action(int $taskId, string $action): array
     {
-        return $this->client->call('tasks.task.start', ['taskId' => $taskId]);
-    }
+        $allowedActions = [
+            'start' => 'tasks.task.start',
+            'pause' => 'tasks.task.pause',
+            'complete' => 'tasks.task.complete',
+            'renew' => 'tasks.task.renew',
+            'defer' => 'tasks.task.defer',
+            'approve' => 'tasks.task.approve',
+            'disapprove' => 'tasks.task.disapprove',
+            'reject' => 'tasks.task.reject',
+        ];
 
-    public function pause(int $taskId): array
-    {
-        return $this->client->call('tasks.task.pause', ['taskId' => $taskId]);
-    }
+        if (!array_key_exists($action, $allowedActions)) {
+            return [
+                'success' => false,
+                'message' => 'Azione task non valida.'
+            ];
+        }
 
-    public function complete(int $taskId): array
-    {
-        return $this->client->call('tasks.task.complete', ['taskId' => $taskId]);
-    }
-
-    public function renew(int $taskId): array
-    {
-        return $this->client->call('tasks.task.renew', ['taskId' => $taskId]);
+        return $this->client->call($allowedActions[$action], [
+            'taskId' => $taskId
+        ]);
     }
 
     // ------------------------------------------------------------------
